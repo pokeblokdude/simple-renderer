@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "simple-renderer", "simple-renderer\simple-renderer.vcxproj", "{60537E21-6CBD-4E67-9C6A-C6212D170B85}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{60537E21-6CBD-4E67-9C6A-C6212D170B85}.Release|Any CPU.ActiveCfg = Release|Win32
+		{60537E21-6CBD-4E67-9C6A-C6212D170B85}.Release|Any CPU.Build.0 = Release|Win32
+		{60537E21-6CBD-4E67-9C6A-C6212D170B85}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{60537E21-6CBD-4E67-9C6A-C6212D170B85}.Debug|Any CPU.Build.0 = Debug|x64
+	EndGlobalSection
+EndGlobal
