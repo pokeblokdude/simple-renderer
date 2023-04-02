@@ -12,6 +12,8 @@ Renderer::Renderer(int w, int h, bool centered)
 
 Renderer::~Renderer()
 {
+    delete[] pixels;
+    SDL_DestroyTexture(renderTexture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
@@ -34,22 +36,28 @@ bool Renderer::Initialize()
         ypos = (dm.h / 2) - (height / 2);
     }
     
-    SDL_Window* win = SDL_CreateWindow("Simple Renderer", xpos, ypos, width, height, SDL_WINDOW_SHOWN);
-    if(win == nullptr)
+    window = SDL_CreateWindow("Simple Renderer", xpos, ypos, width, height, SDL_WINDOW_SHOWN);
+    if(window == nullptr)
     {
         std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
         SDL_Quit();
         return false;
     }
 
-    SDL_Renderer* renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if(renderer == nullptr)
     {
-        SDL_DestroyWindow(win);
+        SDL_DestroyWindow(window);
         std::cout << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
         SDL_Quit();
         return false;
     }
+
+    // create render texture and array of pixel color values
+    renderTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, width, height);
+    pixels = new uint32_t[width*height];
+    // initialize screen color to black
+    memset(pixels, 0, width * height * sizeof(uint32_t));
 
     return true;
 }
@@ -60,17 +68,20 @@ void Renderer::PollEvents()
     // handle events
     while(SDL_PollEvent(&e) != 0)
     {
-        if(e.type == SDL_QUIT)
+        switch(e.type)
         {
-            quit = true;
+            case SDL_QUIT:
+                quit = true;
+                break;
         }
     }
 }
 
 void Renderer::Render()
 {
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderDrawPoint(renderer, width/2, height/2);
+    SDL_UpdateTexture(renderTexture, nullptr, pixels, width * sizeof(uint32_t));
+    SDL_RenderClear(renderer);
+    SDL_RenderCopy(renderer, renderTexture, nullptr, nullptr);
     SDL_RenderPresent(renderer);
 }
 

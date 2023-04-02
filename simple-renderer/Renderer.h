@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <stdint.h>
 
 class Renderer
 {
@@ -18,4 +19,6 @@ private:
     int width, height;
     struct SDL_Window* window;
     struct SDL_Renderer* renderer;
+    struct SDL_Texture* renderTexture;
+    uint32_t* pixels;
 };
