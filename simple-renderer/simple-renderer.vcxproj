@@ -156,9 +156,27 @@
   <ItemGroup>
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="simple-renderer.cpp" />
+    <ClCompile Include="math\Transform.cpp" />
+    <ClCompile Include="math\VectorMath.cpp" />
+    <ClCompile Include="world\Camera.cpp" />
+    <ClCompile Include="world\Mesh.cpp" />
+    <ClCompile Include="world\PointLight.cpp" />
+    <ClCompile Include="world\Object.cpp" />
+    <ClCompile Include="world\Scene.cpp" />
+    <ClCompile Include="world\shapes\Cube.cpp" />
+    <ClCompile Include="world\shapes\Quad.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="math\Transform.h" />
+    <ClInclude Include="math\VectorMath.h" />
+    <ClInclude Include="world\Camera.h" />
+    <ClInclude Include="world\Mesh.h" />
+    <ClInclude Include="world\PointLight.h" />
+    <ClInclude Include="world\Object.h" />
+    <ClInclude Include="world\Scene.h" />
+    <ClInclude Include="world\shapes\Cube.h" />
+    <ClInclude Include="world\shapes\Quad.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -77,7 +77,7 @@ void Renderer::PollEvents()
     }
 }
 
-void Renderer::Render()
+void Renderer::Draw()
 {
     SDL_UpdateTexture(renderTexture, nullptr, pixels, width * sizeof(uint32_t));
     SDL_RenderClear(renderer);

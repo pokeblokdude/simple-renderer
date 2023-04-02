@@ -4,6 +4,11 @@
 #include <iostream>
 #include <chrono>
 
+#include "world/Camera.h"
+#include "world/Object.h"
+#include "world/Scene.h"
+#include "world/shapes/Cube.h"
+
 int main(int argc, char** argv)
 {
     SDL_SetMainReady();
@@ -17,8 +22,11 @@ int main(int argc, char** argv)
         return 1;    
     }
 
-    std::chrono::microseconds deltaTime;
+    Scene* scene = new Scene();
+    //scene->objects.push_back(new Object(dynamic_cast<Mesh*>(new Cube())));
     
+    // render loop
+    std::chrono::microseconds deltaTime;
     while(!renderer->quit)
     {
         std::chrono::time_point<std::chrono::steady_clock> start = std::chrono::high_resolution_clock::now();
@@ -28,12 +36,14 @@ int main(int argc, char** argv)
         }
 
         renderer->PollEvents();
-        renderer->Render();
+        scene->camera->RenderSceneToPixels(renderer->pixels);
+        renderer->Draw();
 
         std::chrono::time_point<std::chrono::steady_clock> end = std::chrono::high_resolution_clock::now();
         deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
     }
 
+    delete scene;
     delete renderer;
     return 0;
 }

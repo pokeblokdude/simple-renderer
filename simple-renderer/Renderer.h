@@ -9,9 +9,10 @@ public:
 
     bool Initialize();
     void PollEvents();
-    void Render();
+    void Draw();
 
     bool quit = false;
+    uint32_t* pixels;
     
 private:
     bool initCenter;
@@ -20,5 +21,4 @@ private:
     struct SDL_Window* window;
     struct SDL_Renderer* renderer;
     struct SDL_Texture* renderTexture;
-    uint32_t* pixels;
 };
