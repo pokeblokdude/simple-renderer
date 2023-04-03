@@ -23,7 +23,7 @@ int main(int argc, char** argv)
     }
 
     Scene* scene = new Scene();
-    //scene->objects.push_back(new Object(dynamic_cast<Mesh*>(new Cube())));
+    scene->objects.push_back(new Object((Mesh*)(new Cube())));
     
     // render loop
     std::chrono::microseconds deltaTime;

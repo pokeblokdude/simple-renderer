@@ -6,8 +6,7 @@
 
 Scene::Scene()
 {
-    camera = new Camera(this, 50, 1, 0.1f, 1000);
-    camera->transform->position.z = -10;
+    
 }
 
 Scene::~Scene()
@@ -21,5 +20,10 @@ Scene::~Scene()
         delete l;
     }
     delete camera;
+}
+
+void Scene::CreateCamera(float fov, int width, int height, float near, float far)
+{
+    camera = new Camera(this, fov, width, height, near, far);
 }
 

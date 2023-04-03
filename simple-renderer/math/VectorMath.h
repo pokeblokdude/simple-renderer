@@ -1,5 +1,8 @@
 ﻿#pragma once
 
+#define M_RAD_TO_DEG 57.2957795131f
+#define M_DEG_TO_RAD 0.0174532925199f
+
 struct vec2 {
   float x;
   float y;
@@ -91,8 +94,8 @@ struct vec2i {
     lhs *= rhs;
     return lhs;
   }
-  // override v/f multiplication
-  vec2i& operator*=(const float& rhs) {
+  // override v/i multiplication
+  vec2i& operator*=(const int& rhs) {
     this->x *= rhs;
     this->y *= rhs;
     return *this;
@@ -371,6 +374,12 @@ struct mat4x4 {
   float m30, m31, m32, m33;
 };
 
+// cross product of two vectors
+vec3 cross(vec3 a, vec3 b);
+
+// convert from radians to degrees
+float degrees(float r);
+
 // return determinant of square matrix
 float determinant(mat2x2 m);
 float determinant(mat3x3 m);
@@ -416,6 +425,9 @@ vec4 mul(mat4x4 m, vec4 v);
 vec2 normalize(vec2 v);
 vec3 normalize(vec3 v);
 vec4 normalize(vec4 v);
+
+// convert from degrees to radians
+float radians(float d);
 
 // returns 1/sqrt(x)
 float rsqrt(float x);

@@ -1,6 +1,20 @@
 ﻿#include "VectorMath.h"
 #include <cmath>
 
+// cross product of two vectors
+vec3 cross(vec3 a, vec3 b) {
+  return vec3{
+    a.y*b.z - a.z*b.y,
+    a.z*b.x - a.x*b.z,
+    a.x*b.y - a.y*b.x
+  };
+}
+
+// convert from radians to degrees
+float degrees(float r) {
+  return r * M_RAD_TO_DEG;
+}
+
 // CREDIT: https://developer.download.nvidia.com/cg/determinant.html
 // return determinant of square matrix
 float determinant(mat2x2 m) {
@@ -285,6 +299,11 @@ vec3 normalize(vec3 v) {
 }
 vec4 normalize(vec4 v) {
   return rsqrt(dot(v, v)) * v;
+}
+
+// convert degrees to radians
+float radians(float d) {
+  return d * M_DEG_TO_RAD;
 }
 
 // CREDIT: Quake III - https://en.wikipedia.org/wiki/Fast_inverse_square_root
