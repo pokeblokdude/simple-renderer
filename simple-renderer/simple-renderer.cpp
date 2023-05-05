@@ -24,6 +24,7 @@ int main(int argc, char** argv)
 
     Scene* scene = new Scene();
     scene->objects.push_back(new Object((Mesh*)(new Cube())));
+    scene->CreateCamera(50, 640, 480, 0.1f, 1000);
     
     // render loop
     std::chrono::microseconds deltaTime;

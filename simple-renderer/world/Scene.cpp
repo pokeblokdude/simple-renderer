@@ -1,6 +1,5 @@
 ﻿#include "Scene.h"
 #include "Camera.h"
-#include "../math/Transform.h"
 #include "Object.h"
 #include "PointLight.h"
 

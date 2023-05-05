@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "../math/VectorMath.h"
+#include <glm/vec4.hpp>
 
 class PointLight
 {
@@ -8,6 +8,6 @@ public:
     ~PointLight();
     
     class Transform* transform;
-    vec4 color;
+    glm::vec4 color;
     float intensity;
 };

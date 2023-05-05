@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <vector>
 
-#include "../math/VectorMath.h"
+#include <glm/mat4x4.hpp>
 
 class Camera
 {
@@ -21,12 +21,7 @@ public:
     int width, height;
 
 private:
-    mat4x4 M, V, P;
-    
-    void ModelMatrix();
-    void ViewMatrix();
-    void ProjectionMatrix();
 
-    void DrawTriangle(std::vector<struct vec4>* verts, struct vec3i face, uint32_t* pixels);
+    void DrawTriangle(std::vector<class glm::vec4>* verts, class glm::ivec3 face, uint32_t* pixels);
     int Index(int x, int y) const;
 };

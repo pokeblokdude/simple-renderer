@@ -1,10 +1,10 @@
 ﻿#pragma once
 #include <vector>
-#include "../math/VectorMath.h"
+#include <glm/vec3.hpp>
 
 class Mesh
 {
 public:
-    std::vector<vec3> verts;
-    std::vector<vec3i> faces;
+    std::vector<glm::vec3> verts;
+    std::vector<glm::ivec3> faces;
 };
