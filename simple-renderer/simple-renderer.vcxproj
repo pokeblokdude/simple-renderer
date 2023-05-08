@@ -164,6 +164,7 @@
     <ClCompile Include="world\Scene.cpp" />
     <ClCompile Include="world\shapes\Cube.cpp" />
     <ClCompile Include="world\shapes\Quad.cpp" />
+    <ClCompile Include="world\shapes\Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h" />
@@ -175,6 +176,7 @@
     <ClInclude Include="world\Scene.h" />
     <ClInclude Include="world\shapes\Cube.h" />
     <ClInclude Include="world\shapes\Quad.h" />
+    <ClInclude Include="world\shapes\Triangle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

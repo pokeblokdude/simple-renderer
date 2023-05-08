@@ -8,12 +8,17 @@
 #include "world/Object.h"
 #include "world/Scene.h"
 #include "world/shapes/Cube.h"
+#include "world/shapes/Quad.h"
+#include "world/shapes/Triangle.h"
 
 int main(int argc, char** argv)
 {
+    const int WIDTH = 100;
+    const int HEIGHT = 100;
+    
     SDL_SetMainReady();
 
-    Renderer* renderer = new Renderer(640, 480, true);
+    Renderer* renderer = new Renderer(WIDTH, HEIGHT, true);
 
     bool init = renderer->Initialize();
     if(!init)
@@ -23,8 +28,8 @@ int main(int argc, char** argv)
     }
 
     Scene* scene = new Scene();
-    scene->objects.push_back(new Object((Mesh*)(new Cube())));
-    scene->CreateCamera(50, 640, 480, 0.1f, 1000);
+    scene->objects.push_back(new Object((Mesh*)(new Quad())));
+    scene->CreateCamera(60, WIDTH, HEIGHT, 0.1f, 1000);
     
     // render loop
     std::chrono::microseconds deltaTime;
@@ -33,7 +38,7 @@ int main(int argc, char** argv)
         std::chrono::time_point<std::chrono::steady_clock> start = std::chrono::high_resolution_clock::now();
         if(deltaTime.count() != 0)
         {
-            std::cout << 1000000 / deltaTime.count() << "fps / " << deltaTime.count() / (double)1000 << "ms" << std::endl;
+            std::cout << 1000000 / deltaTime.count() << " fps / " << deltaTime.count() / (double)1000 << "ms" << std::endl;
         }
 
         renderer->PollEvents();

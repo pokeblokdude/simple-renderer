@@ -21,7 +21,8 @@ public:
     int width, height;
 
 private:
-
-    void DrawTriangle(std::vector<class glm::vec4>* verts, class glm::ivec3 face, uint32_t* pixels);
+    std::vector<std::vector<uint32_t>> pixelBuffer;
+    
+    void DrawTriangle(std::vector<class glm::vec4>* verts, class glm::ivec3 face);
     int Index(int x, int y) const;
 };

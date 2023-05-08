@@ -16,6 +16,8 @@ Camera::Camera(Scene* scene, float fov, int width, int height, float near, float
     this->aspect = height/(float)width;
     this->nearClip = near;
     this->farClip = far;
+
+    pixelBuffer = std::vector<std::vector<uint32_t>>(height, std::vector<uint32_t>(width, 0));
 }
 
 Camera::~Camera()
@@ -28,17 +30,36 @@ int Camera::Index(int x, int y) const
     return y*width + x;
 }
 
-void Camera::DrawTriangle(std::vector<glm::vec4>* verts, glm::ivec3 face, uint32_t* pixels)
+void DrawLine(glm::ivec2 start, glm::ivec2 end)
+{
+    
+}
+
+void Camera::DrawTriangle(std::vector<glm::vec4>* verts, glm::ivec3 face)
 {
     for(glm::vec4 vert : *verts)
     {
-        pixels[Index((int)vert.x, (int)vert.y)] = 255;
+        vert.x = (vert.x + 1)/2 * width;
+        vert.y = (vert.y + 1)/2 * height;
+
+        pixelBuffer[vert.y][vert.x] = 0xFFFFFFFF;
     }
 }
 
 void Camera::RenderSceneToPixels(uint32_t* pixels)
 {
+    // clear the pixel buffer
+    for(int i = 0; i < pixelBuffer.size(); i++)
+    {
+        for(int j = 0; j < pixelBuffer[i].size(); j++)
+        {
+            pixelBuffer[i][j] = 0;
+        }
+    }
+    
     const glm::mat4 P = glm::perspective(glm::radians(fov), aspect, nearClip, farClip);
+    // lookAt returns NaN when `eye` and `center` are the same value
+    // or when `center - eye` and `up` are parallel
     const glm::mat4 V = glm::lookAt(
         transform->position,
         glm::vec3(0, 0, 0),
@@ -64,7 +85,16 @@ void Camera::RenderSceneToPixels(uint32_t* pixels)
         }
         for(glm::ivec3 face : obj->mesh->faces)
         {
-            DrawTriangle(&objectVerts, face, pixels);
+            DrawTriangle(&objectVerts, face);
+        }
+    }
+
+    // write 2d camera buffer to 1d pixel buffer for SDL to draw
+    for(int i = 0; i < pixelBuffer.size(); i++)
+    {
+        for(int j = 0; j < pixelBuffer[i].size(); j++)
+        {
+            pixels[Index(j, i)] = pixelBuffer[i][j];
         }
     }
 }

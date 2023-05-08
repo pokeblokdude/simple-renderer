@@ -2,6 +2,7 @@
 #include "Camera.h"
 #include "Object.h"
 #include "PointLight.h"
+#include "../math/Transform.h"
 
 Scene::Scene()
 {
@@ -24,5 +25,6 @@ Scene::~Scene()
 void Scene::CreateCamera(float fov, int width, int height, float near, float far)
 {
     camera = new Camera(this, fov, width, height, near, far);
+    camera->transform->position.z = -10;
 }
 
