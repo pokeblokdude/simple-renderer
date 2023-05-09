@@ -179,6 +179,7 @@
     <ClInclude Include="world\shapes\Cube.h" />
     <ClInclude Include="world\shapes\Quad.h" />
     <ClInclude Include="world\shapes\Triangle.h" />
+    <ClInclude Include="world\Vertex.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

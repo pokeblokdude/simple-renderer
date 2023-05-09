@@ -4,6 +4,7 @@
 
 Object::Object()
 {
+    transform = new Transform();
     mesh = nullptr;
 }
 

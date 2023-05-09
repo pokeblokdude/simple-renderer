@@ -4,14 +4,14 @@
 Cube::Cube()
 {
     verts = {
-        glm::vec3{ 0.5f,  0.5f, -0.5f},      // 0 - front top right
-        glm::vec3{-0.5f,  0.5f, -0.5f},      // 1 - front top left
-        glm::vec3{-0.5f, -0.5f, -0.5f},      // 2 - front bottom left
-        glm::vec3{ 0.5f, -0.5f, -0.5f},      // 3 - front bottom right
-        glm::vec3{ 0.5f,  0.5f,  0.5f},      // 4 - back top right
-        glm::vec3{-0.5f,  0.5f,  0.5f},      // 5 - back top left
-        glm::vec3{-0.5f, -0.5f,  0.5f},      // 6 - back bottom left
-        glm::vec3{ 0.5f, -0.5f,  0.5f}       // 7 - back bottom right
+        {glm::vec3{ 0.5f,  0.5f, -0.5f}},      // 0 - front top right
+        {glm::vec3{-0.5f,  0.5f, -0.5f}},      // 1 - front top left
+        {glm::vec3{-0.5f, -0.5f, -0.5f}},      // 2 - front bottom left
+        {glm::vec3{ 0.5f, -0.5f, -0.5f}},      // 3 - front bottom right
+        {glm::vec3{ 0.5f,  0.5f,  0.5f}},      // 4 - back top right
+        {glm::vec3{-0.5f,  0.5f,  0.5f}},      // 5 - back top left
+        {glm::vec3{-0.5f, -0.5f,  0.5f}},      // 6 - back bottom left
+        {glm::vec3{ 0.5f, -0.5f,  0.5f}}       // 7 - back bottom right
     };
     faces= {
         glm::ivec3{0, 1, 2},     // front

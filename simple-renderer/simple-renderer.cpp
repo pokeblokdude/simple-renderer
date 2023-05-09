@@ -13,8 +13,8 @@
 
 int main(int argc, char** argv)
 {
-    const int WIDTH = 640;
-    const int HEIGHT = 480;
+    const int WIDTH = 1280;
+    const int HEIGHT = 720;
     
     SDL_SetMainReady();
 
@@ -28,7 +28,7 @@ int main(int argc, char** argv)
     }
 
     Scene* scene = new Scene();
-    scene->objects.push_back(new Object((Mesh*)(new Cube())));
+    scene->objects.push_back(new Object((Mesh*)(new Triangle())));
     scene->CreateCamera(50, WIDTH, HEIGHT, 0.1f, 1000);
     
     // render loop

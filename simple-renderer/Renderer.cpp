@@ -84,5 +84,3 @@ void Renderer::Draw()
     SDL_RenderCopy(renderer, renderTexture, nullptr, nullptr);
     SDL_RenderPresent(renderer);
 }
-
-

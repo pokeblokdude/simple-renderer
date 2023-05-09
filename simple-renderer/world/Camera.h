@@ -21,8 +21,11 @@ public:
     int width, height;
 
 private:
-    std::vector<std::vector<uint32_t>> pixelBuffer;
+    std::vector<std::vector<uint32_t>> colorBuffer;
+    std::vector<std::vector<uint8_t>> depthBuffer;
+
+    class AABB* renderBounds;
     
-    void DrawTriangle(std::vector<class glm::vec4>* verts, class glm::ivec3 face, class AABB* bounds);
+    void DrawTriangle(std::vector<class glm::vec4>* verts, std::vector<class glm::vec3>* colors, class glm::ivec3 face);
     int Index(int x, int y) const;
 };
