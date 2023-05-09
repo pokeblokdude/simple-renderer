@@ -5,6 +5,7 @@
 #include "./Scene.h"
 #include "Mesh.h"
 #include "Object.h"
+#include "../math/AABB.h"
 
 Camera::Camera(Scene* scene, float fov, int width, int height, float near, float far)
 {
@@ -13,7 +14,7 @@ Camera::Camera(Scene* scene, float fov, int width, int height, float near, float
     this->fov = fov;
     this->width = width;
     this->height = height;
-    this->aspect = height/(float)width;
+    this->aspect = width/(float)height;
     this->nearClip = near;
     this->farClip = far;
 
@@ -30,16 +31,64 @@ int Camera::Index(int x, int y) const
     return y*width + x;
 }
 
-void DrawLine(glm::ivec2 start, glm::ivec2 end)
+float InsideTriangle(glm::vec2 v0, glm::vec2 v1, glm::vec2 p)
 {
-    
+    glm::vec2 A = p-v0;
+    glm::vec2 B = v1-v0;
+
+    // Zero = point on edge
+    // Positive = point right of edge
+    // Negative = point left of edge
+    return A.x * B.y - A.y * B.x;
 }
 
-void Camera::DrawTriangle(std::vector<glm::vec4>* verts, glm::ivec3 face)
+void Camera::DrawTriangle(std::vector<glm::vec4>* verts, glm::ivec3 face, AABB* bounds)
 {
-    for(glm::vec4 vert : *verts)
+    glm::vec2 v0 = verts->at(face.x);
+    glm::vec2 v1 = verts->at(face.y);
+    glm::vec2 v2 = verts->at(face.z);
+
+    // setup 2d triangle bounding box
+    bounds->min.x = v0.x;
+    bounds->min.x = glm::min(bounds->min.x, v1.x);
+    bounds->min.x = glm::min(bounds->min.x, v2.x);
+    bounds->min.x = glm::max(0.f, bounds->min.x);
+    
+    bounds->min.y = v0.y;
+    bounds->min.y = glm::min(bounds->min.y, v1.y);
+    bounds->min.y = glm::min(bounds->min.y, v2.y);
+    bounds->min.y = glm::max(0.f, bounds->min.y);
+
+    bounds->max.x = v0.x;
+    bounds->max.x = glm::max(bounds->max.x, v1.x);
+    bounds->max.x = glm::max(bounds->max.x, v2.x);
+    bounds->max.x = glm::min((float)width-1, bounds->max.x);
+    
+    bounds->max.y = v0.y;
+    bounds->max.y = glm::max(bounds->max.y, v1.y);
+    bounds->max.y = glm::max(bounds->max.y, v2.y);
+    bounds->max.y = glm::min((float)height-1, bounds->max.y);
+    
+    //glm::vec2 e01 = v1-v0;
+    //glm::vec2 e12 = v2-v1;
+    //glm::vec2 e20 = v0-v2;
+
+    for(int i = (int)glm::floor(bounds->max.y); i > (int)glm::floor(bounds->min.y); i--)
     {
-        pixelBuffer[vert.y][vert.x] = 0xFFFFFFFF;
+        for(int j = (int)glm::floor(bounds->min.x); j < (int)glm::floor(bounds->max.x); j++)
+        {
+            glm::vec2 p(j, i);
+
+            // 2d cross product to determine
+            float e0 = InsideTriangle(v1, v0, p);
+            float e1 = InsideTriangle(v2, v1, p);
+            float e2 = InsideTriangle(v0, v2, p);
+
+            if(e0 >= 0 && e1 >= 0 && e2 >=0)
+            {
+                pixelBuffer[i][j] = 0xFFFFFFFF;
+            }
+        }
     }
 }
 
@@ -73,7 +122,7 @@ void Camera::RenderSceneToPixels(uint32_t* pixels)
         glm::mat4 MVP = P * V * M;
         
         std::vector<glm::vec4> objectVerts;
-        objectVerts.reserve(obj->mesh->verts.capacity());
+        objectVerts.reserve(obj->mesh->verts.size());
         // apply transformations
         for(glm::vec3 v : obj->mesh->verts)
         {
@@ -84,10 +133,13 @@ void Camera::RenderSceneToPixels(uint32_t* pixels)
             
             objectVerts.push_back(newvert);
         }
+        
+        AABB* bounds = new AABB();
         for(glm::ivec3 face : obj->mesh->faces)
         {
-            DrawTriangle(&objectVerts, face);
+            DrawTriangle(&objectVerts, face, bounds);
         }
+        delete bounds;
     }
 
     // write 2d camera buffer to 1d pixel buffer for SDL to draw

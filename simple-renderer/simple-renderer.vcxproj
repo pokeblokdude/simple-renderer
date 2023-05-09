@@ -154,6 +154,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="math\AABB.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="simple-renderer.cpp" />
     <ClCompile Include="math\Transform.cpp" />
@@ -167,6 +168,7 @@
     <ClCompile Include="world\shapes\Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="math\AABB.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="math\Transform.h" />
     <ClInclude Include="world\Camera.h" />

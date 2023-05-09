@@ -14,7 +14,7 @@
 int main(int argc, char** argv)
 {
     const int WIDTH = 640;
-    const int HEIGHT = 640;
+    const int HEIGHT = 480;
     
     SDL_SetMainReady();
 

@@ -23,6 +23,6 @@ public:
 private:
     std::vector<std::vector<uint32_t>> pixelBuffer;
     
-    void DrawTriangle(std::vector<class glm::vec4>* verts, class glm::ivec3 face);
+    void DrawTriangle(std::vector<class glm::vec4>* verts, class glm::ivec3 face, class AABB* bounds);
     int Index(int x, int y) const;
 };
