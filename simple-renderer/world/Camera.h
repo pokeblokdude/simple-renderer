@@ -9,7 +9,7 @@ class Camera
 public:
     Camera(class Scene* scene, float fov, int width, int height, float near, float far);
     ~Camera();
-
+    
     void RenderSceneToPixels(uint32_t* pixels);
     
     class Scene* owningScene;
@@ -19,6 +19,8 @@ public:
     float farClip;
     float nearClip;
     int width, height;
+
+    uint32_t clearColor;
 
 private:
     std::vector<std::vector<uint32_t>> colorBuffer;

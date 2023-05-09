@@ -18,6 +18,8 @@ Camera::Camera(Scene* scene, float fov, int width, int height, float near, float
     this->nearClip = near;
     this->farClip = far;
 
+    clearColor = 0xFF101010;
+        
     colorBuffer = std::vector<std::vector<uint32_t>>(height, std::vector<uint32_t>(width, 0));
     depthBuffer = std::vector<std::vector<uint8_t>>(height, std::vector<uint8_t>(width, 0));
 
@@ -35,7 +37,7 @@ int Camera::Index(int x, int y) const
     return y*width + x;
 }
 
-float InsideTriangle(glm::vec2 v0, glm::vec2 v1, glm::vec2 p)
+float InsideTriangle(glm::vec3 v0, glm::vec3 v1, glm::vec3 p)
 {
     glm::vec2 A = p-v0;
     glm::vec2 B = v1-v0;
@@ -48,31 +50,43 @@ float InsideTriangle(glm::vec2 v0, glm::vec2 v1, glm::vec2 p)
 
 void Camera::DrawTriangle(std::vector<glm::vec4>* verts, std::vector<glm::vec3>* colors, glm::ivec3 face)
 {
-    glm::vec2 v0 = verts->at(face.x);
-    glm::vec2 v1 = verts->at(face.y);
-    glm::vec2 v2 = verts->at(face.z);
+    glm::vec3 v0 = verts->at(face.x);
+    glm::vec3 v1 = verts->at(face.y);
+    glm::vec3 v2 = verts->at(face.z);
 
+    // calculate surface normal
+    glm::vec3 V = v1 - v0;
+    glm::vec3 U = v2 - v0;
+    glm::vec3 normal;
+    normal.x = U.y * V.z - U.z * V.y;
+    normal.y = U.z * V.x - U.x * V.z;
+    normal.z = U.x * V.y - U.y * V.x;
+    normal = glm::normalize(normal);
+    
+    glm::vec3 camVector = -transform->Forward();
+    float angle = glm::dot(normal, camVector);
+    if(angle < 0)
+    {
+        return;
+    }
+    
     // setup 2d triangle bounding box
-    renderBounds->min.x = v0.x;
-    renderBounds->min.x = glm::min(renderBounds->min.x, v1.x);
+    renderBounds->min.x = glm::min(v0.x, v1.x);
     renderBounds->min.x = glm::min(renderBounds->min.x, v2.x);
     renderBounds->min.x = glm::max(0.f, renderBounds->min.x);
     
-    renderBounds->min.y = v0.y;
-    renderBounds->min.y = glm::min(renderBounds->min.y, v1.y);
+    renderBounds->min.y = glm::min(v0.y, v1.y);
     renderBounds->min.y = glm::min(renderBounds->min.y, v2.y);
     renderBounds->min.y = glm::max(0.f, renderBounds->min.y);
-
-    renderBounds->max.x = v0.x;
-    renderBounds->max.x = glm::max(renderBounds->max.x, v1.x);
+    
+    renderBounds->max.x = glm::max(v0.x, v1.x);
     renderBounds->max.x = glm::max(renderBounds->max.x, v2.x);
     renderBounds->max.x = glm::min((float)width-1, renderBounds->max.x);
     
-    renderBounds->max.y = v0.y;
-    renderBounds->max.y = glm::max(renderBounds->max.y, v1.y);
+    renderBounds->max.y = glm::max(v0.y, v1.y);
     renderBounds->max.y = glm::max(renderBounds->max.y, v2.y);
     renderBounds->max.y = glm::min((float)height-1, renderBounds->max.y);
-
+    
     glm::vec3 color0 = colors->at(face.x);
     glm::vec3 color1 = colors->at(face.y);
     glm::vec3 color2 = colors->at(face.z);
@@ -83,7 +97,7 @@ void Camera::DrawTriangle(std::vector<glm::vec4>* verts, std::vector<glm::vec3>*
     {
         for(int j = (int)glm::floor(renderBounds->min.x); j < (int)glm::floor(renderBounds->max.x); j++)
         {
-            glm::vec2 p(j, i);
+            glm::vec3 p(j, i, 0);
 
             // 2d cross product to determine
             float e0 = InsideTriangle(v2, v1, p);
@@ -118,7 +132,7 @@ void Camera::RenderSceneToPixels(uint32_t* pixels)
     {
         for(int j = 0; j < colorBuffer[i].size(); j++)
         {
-            colorBuffer[i][j] = 0;
+            colorBuffer[i][j] = clearColor;
         }
     }
     
