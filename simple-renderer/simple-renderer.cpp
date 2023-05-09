@@ -13,8 +13,8 @@
 
 int main(int argc, char** argv)
 {
-    const int WIDTH = 100;
-    const int HEIGHT = 100;
+    const int WIDTH = 640;
+    const int HEIGHT = 640;
     
     SDL_SetMainReady();
 
@@ -28,8 +28,8 @@ int main(int argc, char** argv)
     }
 
     Scene* scene = new Scene();
-    scene->objects.push_back(new Object((Mesh*)(new Quad())));
-    scene->CreateCamera(60, WIDTH, HEIGHT, 0.1f, 1000);
+    scene->objects.push_back(new Object((Mesh*)(new Cube())));
+    scene->CreateCamera(50, WIDTH, HEIGHT, 0.1f, 1000);
     
     // render loop
     std::chrono::microseconds deltaTime;

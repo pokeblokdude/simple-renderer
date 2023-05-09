@@ -39,9 +39,6 @@ void Camera::DrawTriangle(std::vector<glm::vec4>* verts, glm::ivec3 face)
 {
     for(glm::vec4 vert : *verts)
     {
-        vert.x = (vert.x + 1)/2 * width;
-        vert.y = (vert.y + 1)/2 * height;
-
         pixelBuffer[vert.y][vert.x] = 0xFFFFFFFF;
     }
 }
@@ -81,7 +78,11 @@ void Camera::RenderSceneToPixels(uint32_t* pixels)
         for(glm::vec3 v : obj->mesh->verts)
         {
             glm::vec4 newvert = {v.x, v.y, v.z, 1};
-            objectVerts.push_back(MVP * newvert);
+            newvert = MVP * newvert;
+            newvert.x = (newvert.x/newvert.w + 1)/2 * width;
+            newvert.y = (newvert.y*-1/newvert.w + 1)/2 * height;
+            
+            objectVerts.push_back(newvert);
         }
         for(glm::ivec3 face : obj->mesh->faces)
         {
