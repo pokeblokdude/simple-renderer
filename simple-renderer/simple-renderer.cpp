@@ -29,10 +29,10 @@ int main(int argc, char** argv)
     }
 
     Scene* scene = new Scene();
-    scene->objects.push_back(new Object((Mesh*)(new Triangle())));
-    //scene->objects[0]->transform->position.x = -1;
-    //scene->objects.push_back(new Object((Mesh*)(new Quad())));
-    //scene->objects[1]->transform->position.x = 1;
+    scene->objects.push_back(new Object((Mesh*)(new Cube())));
+    scene->objects[0]->transform->position.x = -1;
+    scene->objects.push_back(new Object((Mesh*)(new Quad())));
+    scene->objects[1]->transform->position.x = 1;
     scene->CreateCamera(50, WIDTH, HEIGHT, 0.1f, 1000);
     
     // render loop
@@ -49,8 +49,8 @@ int main(int argc, char** argv)
         scene->camera->RenderSceneToPixels(renderer->pixels);
         renderer->Draw();
 
-        //scene->objects[0]->transform->rotation.y += 0.01f;
-        //scene->objects[1]->transform->rotation.y += 0.01f;
+        scene->objects[0]->transform->rotation.y += 0.01f;
+        scene->objects[1]->transform->rotation.y += 0.01f;
         
         std::chrono::time_point<std::chrono::steady_clock> end = std::chrono::high_resolution_clock::now();
         deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(end - start);

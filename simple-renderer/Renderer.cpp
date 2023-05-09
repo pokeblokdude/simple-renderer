@@ -8,6 +8,8 @@ Renderer::Renderer(int w, int h, bool centered)
     width = w;
     height = h;
     initCenter = centered;
+
+    clearColor = 0xFF101010;
 }
 
 Renderer::~Renderer()
@@ -81,6 +83,7 @@ void Renderer::Draw()
 {
     SDL_UpdateTexture(renderTexture, nullptr, pixels, width * sizeof(uint32_t));
     SDL_RenderClear(renderer);
+    memset(pixels, clearColor, width*height * sizeof(uint32_t));
     SDL_RenderCopy(renderer, renderTexture, nullptr, nullptr);
     SDL_RenderPresent(renderer);
 }

@@ -20,14 +20,16 @@ public:
     float nearClip;
     int width, height;
 
-    uint32_t clearColor;
-
 private:
-    std::vector<std::vector<uint32_t>> colorBuffer;
-    std::vector<std::vector<uint8_t>> depthBuffer;
+    //std::vector<std::vector<uint8_t>> depthBuffer;
 
     class AABB* renderBounds;
     
-    void DrawTriangle(std::vector<class glm::vec4>* verts, std::vector<class glm::vec3>* colors, class glm::ivec3 face);
+    void DrawTriangle(
+        std::vector<class glm::vec4>* verts,
+        std::vector<class glm::vec3>* colors,
+        class glm::ivec3 face,
+        uint32_t* pixels
+    );
     int Index(int x, int y) const;
 };

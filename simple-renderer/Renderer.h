@@ -13,6 +13,8 @@ public:
 
     bool quit = false;
     uint32_t* pixels;
+
+    uint32_t clearColor;
     
 private:
     bool initCenter;

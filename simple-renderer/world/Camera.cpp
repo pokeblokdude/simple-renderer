@@ -17,11 +17,8 @@ Camera::Camera(Scene* scene, float fov, int width, int height, float near, float
     this->aspect = width/(float)height;
     this->nearClip = near;
     this->farClip = far;
-
-    clearColor = 0xFF101010;
-        
-    colorBuffer = std::vector<std::vector<uint32_t>>(height, std::vector<uint32_t>(width, 0));
-    depthBuffer = std::vector<std::vector<uint8_t>>(height, std::vector<uint8_t>(width, 0));
+    
+    //depthBuffer = std::vector<std::vector<uint8_t>>(height, std::vector<uint8_t>(width, 0));
 
     renderBounds = new AABB();
 }
@@ -48,21 +45,22 @@ float InsideTriangle(glm::vec3 v0, glm::vec3 v1, glm::vec3 p)
     return A.x * B.y - A.y * B.x;
 }
 
-void Camera::DrawTriangle(std::vector<glm::vec4>* verts, std::vector<glm::vec3>* colors, glm::ivec3 face)
+void Camera::DrawTriangle(std::vector<glm::vec4>* verts, std::vector<glm::vec3>* colors, glm::ivec3 face, uint32_t* pixels)
 {
     glm::vec3 v0 = verts->at(face.x);
     glm::vec3 v1 = verts->at(face.y);
     glm::vec3 v2 = verts->at(face.z);
 
     // calculate surface normal
-    glm::vec3 V = v1 - v0;
-    glm::vec3 U = v2 - v0;
+    glm::vec3 U = v1 - v0;
+    glm::vec3 V = v2 - v0;
     glm::vec3 normal;
     normal.x = U.y * V.z - U.z * V.y;
     normal.y = U.z * V.x - U.x * V.z;
     normal.z = U.x * V.y - U.y * V.x;
     normal = glm::normalize(normal);
-    
+
+    // backface culling
     glm::vec3 camVector = -transform->Forward();
     float angle = glm::dot(normal, camVector);
     if(angle < 0)
@@ -91,18 +89,18 @@ void Camera::DrawTriangle(std::vector<glm::vec4>* verts, std::vector<glm::vec3>*
     glm::vec3 color1 = colors->at(face.y);
     glm::vec3 color2 = colors->at(face.z);
     
-    float area = InsideTriangle(v2, v1, v0);
+    float area = InsideTriangle(v0, v1, v2);
     
-    for(int i = (int)glm::floor(renderBounds->max.y); i > (int)glm::floor(renderBounds->min.y); i--)
+    for(int i = (int)glm::floor(renderBounds->min.y); i < (int)glm::floor(renderBounds->max.y); i++)
     {
         for(int j = (int)glm::floor(renderBounds->min.x); j < (int)glm::floor(renderBounds->max.x); j++)
         {
             glm::vec3 p(j, i, 0);
 
             // 2d cross product to determine
-            float e0 = InsideTriangle(v2, v1, p);
-            float e1 = InsideTriangle(v0, v2, p);
-            float e2 = InsideTriangle(v1, v0, p);
+            float e0 = InsideTriangle(v1, v2, p);
+            float e1 = InsideTriangle(v2, v0, p);
+            float e2 = InsideTriangle(v0, v1, p);
 
             if(e0 >= 0 && e1 >= 0 && e2 >=0)
             {
@@ -119,7 +117,7 @@ void Camera::DrawTriangle(std::vector<glm::vec4>* verts, std::vector<glm::vec3>*
                 uint8_t green = g * 255;
                 uint8_t blue = b * 255;
 
-                colorBuffer[i][j] = (0xFF << 24 | red << 16 | green << 8 | blue);
+                pixels[Index(j, i)] = (0xFF << 24 | red << 16 | green << 8 | blue);
             }
         }
     }
@@ -127,15 +125,6 @@ void Camera::DrawTriangle(std::vector<glm::vec4>* verts, std::vector<glm::vec3>*
 
 void Camera::RenderSceneToPixels(uint32_t* pixels)
 {
-    // clear the pixel buffer
-    for(int i = 0; i < colorBuffer.size(); i++)
-    {
-        for(int j = 0; j < colorBuffer[i].size(); j++)
-        {
-            colorBuffer[i][j] = clearColor;
-        }
-    }
-    
     const glm::mat4 P = glm::perspective(glm::radians(fov), aspect, nearClip, farClip);
     // lookAt returns NaN when `eye` and `center` are the same value
     // or when `center - eye` and `up` are parallel
@@ -165,7 +154,7 @@ void Camera::RenderSceneToPixels(uint32_t* pixels)
             glm::vec4 newvert = {v.position.x, v.position.y, v.position.z, 1};
             newvert = MVP * newvert;
             newvert.x = (newvert.x/newvert.w + 1)/2 * width;
-            newvert.y = (newvert.y*-1/newvert.w + 1)/2 * height;
+            newvert.y = (newvert.y/newvert.w + 1)/2 * height;
             
             objectVerts.push_back(newvert);
             objectColors.push_back(v.color);
@@ -173,16 +162,7 @@ void Camera::RenderSceneToPixels(uint32_t* pixels)
         
         for(glm::ivec3 face : obj->mesh->faces)
         {
-            DrawTriangle(&objectVerts, &objectColors, face);
-        }
-    }
-
-    // write 2d camera buffer to 1d pixel buffer for SDL to draw
-    for(int i = 0; i < colorBuffer.size(); i++)
-    {
-        for(int j = 0; j < colorBuffer[i].size(); j++)
-        {
-            pixels[Index(j, i)] = colorBuffer[i][j];
+            DrawTriangle(&objectVerts, &objectColors, face, pixels);
         }
     }
 }
