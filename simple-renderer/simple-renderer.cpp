@@ -4,6 +4,7 @@
 #include <iostream>
 #include <chrono>
 
+#include "math/Transform.h"
 #include "world/Camera.h"
 #include "world/Object.h"
 #include "world/Scene.h"
@@ -13,8 +14,8 @@
 
 int main(int argc, char** argv)
 {
-    const int WIDTH = 1280;
-    const int HEIGHT = 720;
+    const int WIDTH = 640;
+    const int HEIGHT = 480;
     
     SDL_SetMainReady();
 
@@ -28,7 +29,7 @@ int main(int argc, char** argv)
     }
 
     Scene* scene = new Scene();
-    scene->objects.push_back(new Object((Mesh*)(new Triangle())));
+    scene->objects.push_back(new Object((Mesh*)(new Cube())));
     scene->CreateCamera(50, WIDTH, HEIGHT, 0.1f, 1000);
     
     // render loop
@@ -45,10 +46,12 @@ int main(int argc, char** argv)
         scene->camera->RenderSceneToPixels(renderer->pixels);
         renderer->Draw();
 
+        scene->objects[0]->transform->rotation.y += 0.01f;
+        
         std::chrono::time_point<std::chrono::steady_clock> end = std::chrono::high_resolution_clock::now();
         deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
     }
-
+    
     delete scene;
     delete renderer;
     return 0;

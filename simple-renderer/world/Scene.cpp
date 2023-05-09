@@ -25,6 +25,6 @@ Scene::~Scene()
 void Scene::CreateCamera(float fov, int width, int height, float near, float far)
 {
     camera = new Camera(this, fov, width, height, near, far);
-    camera->transform->position.z = -5;
+    camera->transform->position.z = -3;
 }
 

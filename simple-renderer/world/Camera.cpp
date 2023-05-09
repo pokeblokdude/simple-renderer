@@ -134,7 +134,7 @@ void Camera::RenderSceneToPixels(uint32_t* pixels)
     for(Object* obj : owningScene->objects)
     {
         glm::mat4 translate = glm::translate(glm::mat4(1.0f), obj->transform->position);
-        glm::mat4 rotate = glm::rotate(glm::mat4(1.0f), 0.f, glm::vec3(0, 1, 0));
+        glm::mat4 rotate = glm::rotate(glm::mat4(1.0f), obj->transform->rotation.y, glm::vec3(0, 1, 0));
         glm::mat4 scale = glm::scale(glm::mat4(1.0f), obj->transform->scale);
         glm::mat4 M = translate * rotate * scale;
 
